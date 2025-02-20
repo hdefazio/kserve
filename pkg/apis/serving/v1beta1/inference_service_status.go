@@ -122,6 +122,8 @@ const (
 	RoutesReady apis.ConditionType = "RoutesReady"
 	// LatestDeploymentReady is set when underlying configurations for all components have reported readiness.
 	LatestDeploymentReady apis.ConditionType = "LatestDeploymentReady"
+	//
+	Stopped apis.ConditionType = "Stopped"
 )
 
 type ModelStatus struct {

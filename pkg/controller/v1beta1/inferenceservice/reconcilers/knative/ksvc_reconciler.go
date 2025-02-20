@@ -231,8 +231,14 @@ func reconcileKsvc(desired *knservingv1.Service, existing *knservingv1.Service) 
 
 func (r *KsvcReconciler) Reconcile(ctx context.Context) (*knservingv1.ServiceStatus, error) {
 	desired := r.Service
-	existing := &knservingv1.Service{}
+	if stop, ok := desired.Spec.Template.Annotations[constants.StopResumeAnnotationKey]; ok && stop == "true" {
+		log.Info("Stopping knative service", "namespace", desired.Namespace, "name", desired.Name)
+		return &desired.Status, r.client.Delete(ctx, desired)
+	} else {
+		log.Info("Resume knative service", "namespace", desired.Namespace, "name", desired.Name)
+	}
 
+	existing := &knservingv1.Service{}
 	err := retry.RetryOnConflict(retry.DefaultBackoff, func() error {
 		log.Info("Updating knative service", "namespace", desired.Namespace, "name", desired.Name)
 		if err := r.client.Get(ctx, types.NamespacedName{Name: desired.Name, Namespace: desired.Namespace}, existing); err != nil {
