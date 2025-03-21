@@ -387,6 +387,16 @@ func (p *Predictor) Reconcile(ctx context.Context, isvc *v1beta1.InferenceServic
 			p.Log.Info("Clearing ISVC status")
 			isvc.Status = v1beta1.InferenceServiceStatus{}
 
+			// Set any remaining statuses to False with reason "Stopped"
+			for _, cond := range isvc.Status.Conditions {
+				new_cond := &apis.Condition{
+					Type:   cond.Type,
+					Status: corev1.ConditionFalse,
+					Reason: "Stopped",
+				}
+				isvc.Status.SetCondition(cond.Type, new_cond)
+			}
+
 			// Add the stopped condition
 			stopped_condition := &apis.Condition{
 				Type:   v1beta1.Stopped,
