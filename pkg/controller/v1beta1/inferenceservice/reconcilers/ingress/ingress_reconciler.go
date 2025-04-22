@@ -93,10 +93,8 @@ func (ir *IngressReconciler) Reconcile(ctx context.Context, isvc *v1beta1.Infere
 			if err := ir.client.Delete(ctx, existingService); err != nil {
 				return err
 			}
-		} else {
-			if !apierr.IsNotFound(err) {
-				return err
-			}
+		} else if !apierr.IsNotFound(err) {
+			return err
 		}
 
 		// Delete the virtualservice
@@ -106,10 +104,8 @@ func (ir *IngressReconciler) Reconcile(ctx context.Context, isvc *v1beta1.Infere
 			if err := ir.client.Delete(ctx, existingVService); err != nil {
 				return err
 			}
-		} else {
-			if !apierr.IsNotFound(err) {
-				return err
-			}
+		} else if !apierr.IsNotFound(err) {
+			return err
 		}
 
 		return nil
