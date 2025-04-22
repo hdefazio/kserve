@@ -124,6 +124,7 @@ const (
 	LatestDeploymentReady apis.ConditionType = "LatestDeploymentReady"
 	// Stopped is set when the inference service has been stopped and all related objects are deleted
 	Stopped apis.ConditionType = "Stopped"
+ 	Ready apis.ConditionType = "Ready"
 )
 
 type ModelStatus struct {
